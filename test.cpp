@@ -71,14 +71,19 @@ int bufferToInt(const IndirectBuffer &buffer) {
   int handle = buffer.handleForEmscripten();
   return EM_ASM_INT({
     const uint8Array = Module._IB_[$0];
-    return (uint8Array[0] << 0) + (uint8Array[1] << 8) + (uint8Array[2] << 16) + (uint8Array[3] << 24);
+    const int32Array = new Int32Array(uint8Array.buffer);
+    return int32Array[0];
   }, handle);
 }
 
 double bufferToDouble(const IndirectBuffer &buffer) {
   int handle = buffer.handleForEmscripten();
 
-  return (double)handle;
+  return EM_ASM_DOUBLE({
+    const uint8Array = Module._IB_[$0];
+    const float64Array = new Float64Array(uint8Array.buffer);
+    return float64Array[0];
+  }, handle);
 }
 
 // normal class
@@ -198,16 +203,16 @@ int main() {
   // });
   int count = 200000;
   for (int i = 0; i < count; i++) {
-    // NormalBuffer *b = new NormalBuffer("Liangguangming", -300, 180.5, 70, "Shenzhen");
-    // arr.emplace_back(b);
+    NormalBuffer *b = new NormalBuffer("Liangguangming", 30, 180.5, 70, "Shenzhen");
+    arr.emplace_back(b);
 
-    Normal *b = new Normal("Liangguangming", -300, 180.5, 70, "Shenzhen");
-    arr2.emplace_back(b);
+    // Normal *b = new Normal("Liangguangming", -300, 180.5, 70, "Shenzhen");
+    // arr2.emplace_back(b);
   }
   std::cout << "vector size: " << arr.size() << std::endl;
 
-  // NormalBuffer *first = arr[0];
-  Normal *first = arr2[0];
+  NormalBuffer *first = arr[0];
+  // Normal *first = arr2[0];
   cout << "first age: " << first->getAge() << endl;
   cout << "first height: " << first->getHeight() << endl;
   return 0;

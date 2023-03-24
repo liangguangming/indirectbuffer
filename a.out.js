@@ -1688,15 +1688,17 @@ var tempI64;
 // === Body ===
 
 var ASM_CONSTS = {
-  14828: function($0) {(Module._IB_ || (Module._IB_ = {}))[$0] = new Uint8Array();},  
- 14892: function($0) {delete Module._IB_[$0];},  
- 14920: function($0, $1) {return Module._IB_[$0][$1];},  
- 14952: function($0, $1, $2) {Module._IB_[$0][$1] = $2;},  
- 14982: function($0, $1, $2, $3) {Module.HEAP8.set(Module._IB_[$0].subarray($1, $1 + $3), $2);},  
- 15047: function($0, $1, $2, $3) {Module._IB_[$0].set(Module.HEAP8.subarray($2, $2 + $3), $1);},  
- 15112: function($0, $1) {var old = Module._IB_[$0]; (Module._IB_[$0] = new Uint8Array($1)).set(old.length < $1 ? old : old.subarray(0, $1));},  
- 15232: function($0, $1, $2, $3) {var array = Module._IB_[$0]; array.set(array.subarray($2, $2 + $3), $1);},  
- 15309: function($0, $1, $2, $3, $4) {var fromArray = Module._IB_[$3]; var toArray = Module._IB_[$0]; toArray.set(fromArray.subarray($4, $4 + $2), $1);}
+  14876: function($0) {const uint8Array = Module._IB_[$0]; const int32Array = new Int32Array(uint8Array.buffer); return int32Array[0];},  
+ 14992: function($0) {const uint8Array = Module._IB_[$0]; const float64Array = new Float64Array(uint8Array.buffer); return float64Array[0];},  
+ 15114: function($0) {(Module._IB_ || (Module._IB_ = {}))[$0] = new Uint8Array();},  
+ 15178: function($0) {delete Module._IB_[$0];},  
+ 15206: function($0, $1) {return Module._IB_[$0][$1];},  
+ 15238: function($0, $1, $2) {Module._IB_[$0][$1] = $2;},  
+ 15268: function($0, $1, $2, $3) {Module.HEAP8.set(Module._IB_[$0].subarray($1, $1 + $3), $2);},  
+ 15333: function($0, $1, $2, $3) {Module._IB_[$0].set(Module.HEAP8.subarray($2, $2 + $3), $1);},  
+ 15398: function($0, $1) {var old = Module._IB_[$0]; (Module._IB_[$0] = new Uint8Array($1)).set(old.length < $1 ? old : old.subarray(0, $1));},  
+ 15518: function($0, $1, $2, $3) {var array = Module._IB_[$0]; array.set(array.subarray($2, $2 + $3), $1);},  
+ 15595: function($0, $1, $2, $3, $4) {var fromArray = Module._IB_[$3]; var toArray = Module._IB_[$0]; toArray.set(fromArray.subarray($4, $4 + $2), $1);}
 };
 
 
@@ -1799,6 +1801,10 @@ var ASM_CONSTS = {
       var js = jsStackTrace();
       if (Module['extraStackTrace']) js += '\n' + Module['extraStackTrace']();
       return demangleAll(js);
+    }
+
+  function ___assert_fail(condition, filename, line, func) {
+      abort('Assertion failed: ' + UTF8ToString(condition) + ', at: ' + [filename ? UTF8ToString(filename) : 'unknown filename', line, func ? UTF8ToString(func) : 'unknown function']);
     }
 
   function ___cxa_allocate_exception(size) {
@@ -1916,6 +1922,11 @@ var ASM_CONSTS = {
       if (!ASM_CONSTS.hasOwnProperty(code)) abort('No EM_ASM constant found at address ' + code);
       return ASM_CONSTS[code].apply(null, args);
     }
+  function _emscripten_asm_const_double(a0,a1,a2
+  ) {
+  return _emscripten_asm_const_int(a0,a1,a2);
+  }
+
 
   function _emscripten_memcpy_big(dest, src, num) {
       HEAPU8.copyWithin(dest, src, src + num);
@@ -4967,9 +4978,11 @@ function checkIncomingModuleAPI() {
   ignoredModuleProp('fetchSettings');
 }
 var asmLibraryArg = {
+  "__assert_fail": ___assert_fail,
   "__cxa_allocate_exception": ___cxa_allocate_exception,
   "__cxa_throw": ___cxa_throw,
   "abort": _abort,
+  "emscripten_asm_const_double": _emscripten_asm_const_double,
   "emscripten_asm_const_int": _emscripten_asm_const_int,
   "emscripten_memcpy_big": _emscripten_memcpy_big,
   "emscripten_resize_heap": _emscripten_resize_heap,
